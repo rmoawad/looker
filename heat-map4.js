@@ -30,11 +30,7 @@ const initTreeMap = (data,element,config, queryResponse) => {
     const steps = normalizeStepper()
 
     const proportionValue = (val) => {
-        let proportionedValue = val
-        let lastStep = {
-            step: 0,
-            percentage: 0
-        }
+        let proportionedValue = 0;
         if (val <= steps[0].step) {
             return 0;
         }
@@ -42,19 +38,14 @@ const initTreeMap = (data,element,config, queryResponse) => {
             return 1;
         }
         for (const stepI in steps ){
-            const step = steps[stepI]
-            if (val <= step.step || +stepI === steps.length - 1 ){
-                const proportionToStart = lastStep.percentage
-                let proportionToAdd = val * step.percentage / step.step
-                if (proportionToStart > 0) {
-                    const percentageToAdd = val - lastStep.step
-                    proportionToAdd = percentageToAdd * (1 - lastStep.percentage) / (step.step - lastStep.percentage)
-                }
-
-                proportionedValue = proportionToStart + proportionToAdd
+            const nextStep = steps[stepI]
+            if (val <= nextStep.step ) {
+                let preStep = steps[stepI - 1];
+                let distanceFromLastStep = val - preStep.step;
+                let distanceBetweenLastAndNextStep = nextStep.step - preStep.step;
+                let percentageGapBetweenSteps = nextStep.percentage - preStep.percentage;
+                proportionedValue = preStep.percentage + (percentageGapBetweenSteps*(distanceFromLastStep/distanceBetweenLastAndNextStep));
                 break;
-            }else{
-                lastStep = step
             }
         }
         return proportionedValue;
