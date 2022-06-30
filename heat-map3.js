@@ -35,6 +35,12 @@ const initTreeMap = (data,element,config, queryResponse) => {
             step: 0,
             percentage: 0
         }
+        if (val <= steps[0].step) {
+            return 0;
+        }
+        if (val >= steps[steps.length - 1].step) {
+            return 1;
+        }
         for (const stepI in steps ){
             const step = steps[stepI]
             if (val <= step.step || +stepI === steps.length - 1 ){
