@@ -15,16 +15,18 @@ const initTreeMap = (data,element,config, queryResponse) => {
             }
         }
 
-        let breakPointsStepperValues = []
-        for (stepI in steps){
+        let breakPointsStepperValues = [];
+        let rangeMinNumber = +steps[0];
+        let rangeMaxNumber = +steps[steps.length-1];
+        let distance = rangeMaxNumber - rangeMinNumber;
+        for (stepI in steps) {
             const step = +steps[stepI];
             breakPointsStepperValues.push({
-                step,
-                // proportion to 0-1
-                percentage: echarts.number.linearMap(+stepI,[0,steps.length - 1],[0,1],false)
+                step: step,
+                percentage: (step - rangeMinNumber) / distance
             })
         }
-        return breakPointsStepperValues
+        return breakPointsStepperValues;
     }
 
     const steps = normalizeStepper()
